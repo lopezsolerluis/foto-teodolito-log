@@ -4,12 +4,13 @@ import log
 from pca9685 import *
 
 pca = PCA9685()
+
 log.set_labels('altitude', 'azimuth', 'measure', timestamp=log.SECONDS)
 
 servo = 1 # Servo channel
 stepper = 1 # Stepper channel
 reduction = 2 # Relation between the grears of the 'foto-teodolito'
-pause_between_measures = 200 # milliseconds
+pause_between_measures = 1000 # milliseconds
 min_altitude = 30
 delta_alpha = 30
 measure = 0
@@ -20,7 +21,7 @@ while not button_a.was_pressed():
 
 for altitude in range(min_altitude, 90+delta_alpha, delta_alpha):
     pca.setServoDegrees(servo, altitude)
-    delta_azimuth = delta_alpha # TODO: change in function of altitude
+    delta_azimuth = 120 # TODO: change in function of altitude
     azimuth = 0
     while azimuth < 360:
         sleep(pause_between_measures)
@@ -32,10 +33,3 @@ for altitude in range(min_altitude, 90+delta_alpha, delta_alpha):
         })
         pca.moveStepperDegreesBlocking(stepper, delta_azimuth*reduction)
         azimuth += delta_azimuth
-    
-    
-    
-
-
-    
-            
