@@ -20,8 +20,8 @@ while not button_a.was_pressed():
 
 for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
     pca.setServoDegrees(servo, altitude)
-    steps_per_altitude = round(360*cos(radians(altitude)) / delta_altitude) if (altitude != 90) else 1
-    delta_azimuth = 360 / steps_per_altitude
+    steps_in_almucantarat = round(360*cos(radians(altitude)) / delta_altitude) if (altitude != 90) else 1
+    delta_azimuth = 360 / steps_in_almucantarat
     azimuth = 0
     while azimuth < 360:
         sleep(pause_between_measures)
@@ -31,7 +31,7 @@ for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
             'azimuth': azimuth,
             'measure': measure
         })
-        if steps_per_altitude != 1:
+        if steps_in_almucantarat != 1:
             pca.moveStepperDegreesBlocking(stepper, delta_azimuth*reduction)
         azimuth += delta_azimuth
 
