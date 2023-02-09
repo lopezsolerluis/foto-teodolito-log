@@ -20,7 +20,7 @@ while not button_a.was_pressed():
 
 for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
     pca.setServoDegrees(servo, altitude)
-    steps_per_altitude = round(360*cos(radians(altitude)) / delta_altitude)
+    steps_per_altitude = round(360*cos(radians(altitude)) / delta_altitude) if (altitude != 90) else 1
     delta_azimuth = 360 / steps_per_altitude
     azimuth = 0
     while azimuth < 360:
