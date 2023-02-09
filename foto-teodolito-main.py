@@ -12,8 +12,11 @@ reduction = 2 # Relation between the gears of the 'foto-teodolito'
 pause_between_measures = 1000 # milliseconds
 min_altitude = 30 # We don't want to measure the buildings, rigth? :D
 delta_altitude = 30
-measure = 0
 
+def takeReading():
+    measure = 0 # TODO
+    return measure
+    
 # Wait until Button 'A' is pressed. This way, we can sinchronize the measures with an external clock or watch
 while not button_a.was_pressed():
     pass
@@ -25,7 +28,7 @@ for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
     azimuth = 0
     while azimuth < 360:
         sleep(pause_between_measures)
-        # TODO: take reading
+        measure = takeReading()
         log.add({
             'altitude': altitude,
             'azimuth': azimuth,
