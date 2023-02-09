@@ -46,8 +46,8 @@ class PCA9685:
         i2c.write(_PCA9685_ADDRESS, bytes([_LED0_ON_L + 4 * channel, on & 0xff, (on >> 8) & 0xff, off & 0xff, (off >> 8) & 0xff]))
 
     def setServoDegrees(self, servo, degree): # servo: 1, etc.
-        v_us = (degree * 1800 / 180 + 600) # 0.6 ~ 2.4
-        value = v_us * 4096 / 20000
+        v_us = (degree * 10.8 + 600) # 0.6 ~ 2.4 (It's supposed to be '10' instead of 10.8...-?-)
+        value = v_us * 4096.0 / 20000
         self.setPwm(servo + 7, 0, round(value))
 
     def releaseServo(self, servo): # servo: 1, etc.
