@@ -2,9 +2,9 @@
 from microbit import *
 import log
 from pca9685 import *
+from math import cos, radians
 
 pca = PCA9685()
-
 log.set_labels('altitude', 'azimuth', 'measure', timestamp=log.SECONDS)
 
 servo = 1 # Servo channel
@@ -21,7 +21,8 @@ while not button_a.was_pressed():
 
 for altitude in range(min_altitude, 90+delta_alpha, delta_alpha):
     pca.setServoDegrees(servo, altitude)
-    delta_azimuth = 120 # TODO: change in function of altitude
+    steps_per_altitude = round(360*cos(radians(altitude)) / delta_alpha)
+    delta_azimuth = 360 / steps_per_altitude
     azimuth = 0
     while azimuth < 360:
         sleep(pause_between_measures)
