@@ -10,7 +10,7 @@ servo = 1 # Servo channel
 stepper = 1 # Stepper channel
 reduction = 2 # Relation between the gears of the 'foto-teodolito'
 pause_between_measures = 1000 # milliseconds
-min_altitude = 30
+min_altitude = 30 # We don't want to measure the buildings, rigth? :D
 delta_altitude = 30
 measure = 0
 
