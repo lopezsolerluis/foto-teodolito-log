@@ -31,7 +31,8 @@ for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
             'azimuth': azimuth,
             'measure': measure
         })
-        pca.moveStepperDegreesBlocking(stepper, delta_azimuth*reduction)
+        if steps_per_altitude != 1:
+            pca.moveStepperDegreesBlocking(stepper, delta_azimuth*reduction)
         azimuth += delta_azimuth
 
 pca.setServoDegrees(servo, 0) # Parking position
