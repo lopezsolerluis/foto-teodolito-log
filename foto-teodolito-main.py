@@ -9,13 +9,13 @@ log.set_labels('altitude', 'azimuth', 'measure', timestamp=log.SECONDS)
 servo = 1 # Servo channel
 stepper = 1 # Stepper channel
 reduction = 2 # Relation between the gears of the 'foto-teodolito'
-pause_between_measures = 1000 # milliseconds
-min_altitude = 30 # We don't want to measure the buildings, rigth? :D
+LDRpin = pin1 # pin to which the LDR is attached
+pause_before_measure = 200 # milliseconds
+min_altitude = 30 # We don't want to measure the buildings, right? :D
 delta_altitude = 30
 
-def takeReading():
-    measure = 0 # TODO
-    return measure
+def takeReadingLDR():
+    return LDRpin.read_analog()    
     
 # Wait until Button 'A' is pressed. This way, we can sinchronize the measures with an external clock or watch
 while not button_a.was_pressed():
@@ -27,13 +27,13 @@ for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
     delta_azimuth = 360 / steps_in_almucantarat
     azimuth = 0
     while azimuth < 360:
-        sleep(pause_between_measures)
-        measure = takeReading()
+        sleep(pause_before_measure)
+        measure = takeReadingLDR()
         log.add({
             'altitude': altitude,
             'azimuth': azimuth,
             'measure': measure
-        })
+            })
         if steps_in_almucantarat != 1:
             pca.moveStepperDegreesBlocking(stepper, delta_azimuth*reduction)
         azimuth += delta_azimuth
