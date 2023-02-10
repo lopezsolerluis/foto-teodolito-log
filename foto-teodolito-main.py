@@ -1,11 +1,13 @@
 from microbit import *
 import log
 from pca9685 import *
+from bh1750 import *
 from math import cos, radians
 
 pca = PCA9685()
 log.set_labels('altitude', 'azimuth', 'measure', timestamp=log.SECONDS)
 
+measureInstrument = "BH1750" # "LDR" or "BH1750"
 servo = 1 # Servo channel
 stepper = 1 # Stepper channel
 reduction = 2 # Relation between the gears of the 'foto-teodolito'
@@ -14,8 +16,22 @@ pause_before_measure = 200 # milliseconds
 min_altitude = 30 # We don't want to measure the buildings, right? :D
 delta_altitude = 30
 
+bh1750 = BH1750() if measureInstrument == "BH1750" else None
+
 def takeReadingLDR():
     return LDRpin.read_analog()    
+
+def takeReadingBH1750():
+    if bh1750:
+        return bh1750.readLightLevel()
+    else:
+        return 0 # Don't like this...
+
+def takeReading():
+    if measureInstrument == "BH1750":
+        return takeReadingBH1750()
+    else:
+        return takeReadingLDR()
     
 # Wait until Button 'A' is pressed. This way, we can sinchronize the measures with an external clock or watch
 while not button_a.was_pressed():
@@ -28,7 +44,7 @@ for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
     azimuth = 0
     while azimuth < 360:
         sleep(pause_before_measure)
-        measure = takeReadingLDR()
+        measure = takeReading()
         log.add({
             'altitude': altitude,
             'azimuth': azimuth,
