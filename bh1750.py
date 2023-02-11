@@ -29,3 +29,6 @@ class BH1750:
     def set_power(self, on):
         self.send_cmd(1 if on else 0)
 
+    def stop(self):
+        self.set_power(False)
+

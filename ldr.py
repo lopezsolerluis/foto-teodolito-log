@@ -7,3 +7,6 @@ class LDR:
 
     def takeReading(self):
         return self.pin.read_analog()
+
+    def stop(self):
+        pass # There's nothing to stop in a LDR ;)

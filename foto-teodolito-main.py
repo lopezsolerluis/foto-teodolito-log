@@ -39,3 +39,4 @@ for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
         azimuth += delta_azimuth
 
 pca.setServoDegrees(servo, 0) # Parking position
+sensor.stop()
