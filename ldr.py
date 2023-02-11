@@ -1,5 +1,3 @@
-from microbit import *
-
 class LDR:
 
     pause_before_reading = 100 # milliseconds
