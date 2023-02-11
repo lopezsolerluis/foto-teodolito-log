@@ -36,8 +36,7 @@ class BH1750:
     def __init__(self, continuous=True, highResolution=True):
         self.continuous = continuous
         self.highResolution = highResolution 
-        self.start()
-        self.configure(continuous, highResolution)               
+        self.start()             
         
     def readLightLevel(self):
         buf = i2c.read(_BH1750_ADDRESS, 2)
@@ -46,5 +45,3 @@ class BH1750:
 
     def takeReading(self):
         return self.readLightLevel()
-
-    
