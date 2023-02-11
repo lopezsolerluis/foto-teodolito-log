@@ -9,10 +9,14 @@ class BH1750:
 
     pause_before_reading = 200 # milliseconds
 
-    def __init__(self):
-        i2c.write(_BH1750_ADDRESS, bytes([0b0001_0000])) # Continuous mode
+    def send_cmd(self, cmd):
+        i2c.write(_BH1750_ADDRESS, bytes([cmd]))
+        
+    def __init__(self, continuous=True, highResolution=True):
+        cmd = 0b0001_0000 if continuous else 0b0010_0000
+        cmd |= 0 if highResolution else 0b11
+        self.send_cmd(cmd)
         time.sleep_ms(200)
-        # TODO: set different modes    
         
     def readLightLevel(self):
         buf = i2c.read(_BH1750_ADDRESS, 2)
@@ -21,3 +25,7 @@ class BH1750:
 
     def takeReading(self):
         return self.readLightLevel()
+
+    def set_power(self, on):
+        self.send_cmd(1 if on else 0)
+
