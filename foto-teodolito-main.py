@@ -5,23 +5,24 @@ from bh1750 import *
 from ldr import *
 from math import cos, radians
 
-pca = PCA9685()
-
 servo = 1 # Servo channel
 stepper = 1 # Stepper channel
-ldr_pin = pin1 # Pin to which LDR is attached
+ldr_pin = pin1 # pin to which is attached the ldr
 reduction = 2 # Relation between the gears of the 'foto-teodolito'
 min_altitude = 30 # We don't want to measure the buildings, right? :D
 delta_altitude = 30
+
+pca = PCA9685()
 
 first_reading = True
 
 def take_readings(sensor):
     global first_reading
-    sensor.start()
     if first_reading:
+        log.delete()
         log.set_labels('altitude', 'azimuth', 'measure', timestamp=log.SECONDS)
         first_reading = False
+    sensor.start()
     for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
         pca.setServoDegrees(servo, altitude)
         steps_in_almucantarat = round(360*cos(radians(altitude)) / delta_altitude) if (altitude != 90) else 1
