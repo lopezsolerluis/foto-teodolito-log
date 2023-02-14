@@ -30,11 +30,10 @@ def take_readings(sensor):
         azimuth = 0
         while azimuth < 360:
             sleep(sensor.pause_before_reading)
-            measure = sensor.takeReading()
             log.add({
                 'altitude': altitude,
                 'azimuth': azimuth,
-                'measure': measure
+                'measure': sensor.takeReading()
                 })
             if steps_in_almucantarat != 1:
                 pca.moveStepperDegreesBlocking(stepper, delta_azimuth*reduction)
