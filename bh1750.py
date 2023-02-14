@@ -2,6 +2,7 @@
 
 from microbit import i2c
 import time
+import neodisplay
 
 _BH1750_ADDRESS = 0x23
 
@@ -41,7 +42,10 @@ class BH1750:
     def readLightLevel(self):
         buf = i2c.read(_BH1750_ADDRESS, 2)
         level = buf[0] << 8 | buf[1]
-        return level / 1.2 # See datasheet
+        return level / 1.2
 
     def takeReading(self):
         return self.readLightLevel()
+
+    def show_busy(self):
+        neodisplay.show_busy(2)
