@@ -41,7 +41,7 @@ class BH1750:
     def readLightLevel(self):
         buf = i2c.read(_BH1750_ADDRESS, 2)
         level = buf[0] << 8 | buf[1]
-        return level / 1.2
+        return level / 1.2 # See datasheet
 
     def takeReading(self):
         return self.readLightLevel()
