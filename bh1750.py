@@ -8,6 +8,8 @@ _BH1750_ADDRESS = 0x23
 
 class BH1750:
 
+    name = "BH1750"
+
     pause_before_reading = 200 # milliseconds
 
     def send_cmd(self, cmd):
