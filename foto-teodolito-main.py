@@ -79,16 +79,24 @@ def remote_control_mode():
     show_remote_control_available()
     sleep(500) # For not exiting upon arriving... :p
     radio.on()
-    altitude = 0
+    altitude_desired = 0
+    altitude_actual = 0
     vel_azimuth = 0
     while not pin_logo.is_touched():
         msg = radio.receive()
         if msg is not None:
             button = msg[0:1]
-            altitude = int(msg[1:4])
+            altitude_desired = int(msg[1:4])
             vel_azimuth = int(msg[4:7])
 
-            pca.setServoDegrees(1,altitude)
+            altitude_actual = pca.getServoDegrees(servo)
+            
+            if altitude_desired > altitude_actual:
+                altitude_actual += 5
+            elif altitude_desired < altitude_actual:
+                altitude_actual -= 5
+                
+            pca.setServoDegrees(servo, altitude_actual)
             
             if button == 'A':
                 take_remote_reading(LDR(ldr_pin),altitude,"NaN")
@@ -96,11 +104,11 @@ def remote_control_mode():
                 take_remote_reading(BH1750(),altitude,"NaN")
                 
             if vel_azimuth > 10:
-                pca.startStepper(1, False)
+                pca.startStepper(stepper, False)
             elif vel_azimuth < -10:
-                pca.startStepper(1, True)
+                pca.startStepper(stepper, True)
             else:
-                pca.stopStepper(1)
+                pca.stopStepper(stepper)
         sleep(50)
     radio.off() 
     show_available()
