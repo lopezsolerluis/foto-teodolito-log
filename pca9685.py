@@ -62,9 +62,9 @@ class PCA9685:
         global v_us_f        
         channel = servo + 7
         addr = _PCA9685_ADDRESS
-        i2c.write(addr, bytes([_LED0_ON_L + 4 * channel]))
-        buf = i2c.read(addr,4)
-        value = buf[3] << 8 | buf[2]
+        i2c.write(addr, bytes([_LED0_ON_L + 4 * channel + 2]))
+        buf = i2c.read(addr,2)
+        value = buf[1] << 8 | buf[0]
         v_us = value * 20000.0 / 4096.0
         return (v_us - 600) / v_us_f
         
