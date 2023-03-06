@@ -17,6 +17,9 @@ _STP_CHC_H = 3071
 _STP_CHD_L = 3071
 _STP_CHD_H = 1023
 
+v_us_f = 10.8 # (It's supposed to be '10' instead of 10.8...-?-)
+
+
 class PCA9685:
 
     def __init__(self):
@@ -48,17 +51,18 @@ class PCA9685:
                                            (on >> 8) & 0xff,
                                            off & 0xff,
                                            (off >> 8) & 0xff]))
-
-    v_us_f = 10.8 # (It's supposed to be '10' instead of 10.8...-?-)
     
     def setServoDegrees(self, servo, degree): # servo: 1, etc.
-        v_us = (degree * v_us_f + 600) # 0.6 ~ 2.4 
+        global v_us_f
+        v_us = degree * v_us_f + 600 # 0.6 ~ 2.4 
         value = v_us * 4096.0 / 20000
         self.setPwm(servo + 7, 0, round(value))
 
     def getServoDegrees(self, servo): # servo: 1, etc.
+        global v_us_f        
         channel = servo + 7
-        i2c.write(_PCA9685_ADDRESS, bytes([_LED0_ON_L + 4 * channel]))
+        addr = _PCA9685_ADDRESS
+        i2c.write(addr, bytes([_LED0_ON_L + 4 * channel]))
         buf = i2c.read(addr,4)
         value = buf[3] << 8 | buf[2]
         v_us = value * 20000.0 / 4096.0
