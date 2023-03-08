@@ -64,7 +64,8 @@ def take_readings(sensor):
         pca.setServoDegrees(servo, altitude)
         steps_in_almucantarat = round(360*cos(radians(altitude)) / delta_altitude) if (altitude != 90) else 1
         delta_azimuth = 360 / steps_in_almucantarat
-        for azimuth in range(0, 360, delta_azimuth):
+        for step in range(steps_in_almucantarat):
+            azimuth = step * delta_azimuth 
             take_one_reading(sensor, altitude, azimuth)
             if steps_in_almucantarat != 1:
                 pca.moveStepperDegreesBlocking(stepper, delta_azimuth*reduction)
@@ -79,6 +80,7 @@ def remote_control_mode():
     radio.on()
     altitude_desired = 0
     altitude_actual = 0
+    altitude_resolution = 1
     vel_azimuth = 0
     while not pin_logo.is_touched():
         msg = radio.receive()
@@ -90,9 +92,9 @@ def remote_control_mode():
             altitude_actual = pca.getServoDegrees(servo)
             
             if altitude_desired > altitude_actual:
-                altitude_actual += 5
+                altitude_actual += altitude_resolution
             elif altitude_desired < altitude_actual:
-                altitude_actual -= 5
+                altitude_actual -= altitude_resolution
                 
             pca.setServoDegrees(servo, altitude_actual)
             
