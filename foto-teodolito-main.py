@@ -64,12 +64,10 @@ def take_readings(sensor):
         pca.setServoDegrees(servo, altitude)
         steps_in_almucantarat = round(360*cos(radians(altitude)) / delta_altitude) if (altitude != 90) else 1
         delta_azimuth = 360 / steps_in_almucantarat
-        azimuth = 0
-        while azimuth < 360:
+        for azimuth in range(0, 360, delta_azimuth):
             take_one_reading(sensor, altitude, azimuth)
             if steps_in_almucantarat != 1:
                 pca.moveStepperDegreesBlocking(stepper, delta_azimuth*reduction)
-            azimuth += delta_azimuth
     pca.setServoDegrees(servo, 0) # Parking position
     sensor.stop()
     show_available()
