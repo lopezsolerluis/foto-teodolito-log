@@ -80,7 +80,7 @@ def remote_control_mode():
     radio.on()
     altitude_desired = 0
     altitude_actual = 0
-    altitude_resolution = 1
+    altitude_resolution = 3
     vel_azimuth = 0
     while not pin_logo.is_touched():
         msg = radio.receive()
@@ -90,18 +90,19 @@ def remote_control_mode():
             vel_azimuth = int(msg[4:7])
 
             altitude_actual = pca.getServoDegrees(servo)
-            
-            if altitude_desired > altitude_actual:
-                altitude_actual += altitude_resolution
-            elif altitude_desired < altitude_actual:
-                altitude_actual -= altitude_resolution
+
+            if abs(altitude_desired - altitude_actual) > altitude_resolution:
+                if altitude_desired > altitude_actual:
+                    altitude_actual += altitude_resolution
+                elif altitude_desired < altitude_actual:
+                    altitude_actual -= altitude_resolution
                 
             pca.setServoDegrees(servo, altitude_actual)
             
             if button == 'A':
-                take_remote_reading(LDR(ldr_pin),altitude,"NaN")
+                take_remote_reading(LDR(ldr_pin),altitude_actual,"NaN")
             elif button == 'B':
-                take_remote_reading(BH1750(),altitude,"NaN")
+                take_remote_reading(BH1750(),altitude_actual,"NaN")
                 
             if vel_azimuth > 10:
                 pca.startStepper(stepper, False)
