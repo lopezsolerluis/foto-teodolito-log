@@ -87,7 +87,7 @@ def remote_control_mode():
     current_vel_azimuth = 0
     start_time = 0 
 
-    def get_degrees_moved():        
+    def get_degrees_moved():
         return time.ticks_diff(time.ticks_ms(), start_time) * 36 / 1024 / reduction * current_vel_azimuth # + or -?
         
     while not pin_logo.is_touched():
@@ -96,6 +96,16 @@ def remote_control_mode():
             button = msg[0:1]
             altitude_desired = int(msg[1:4])
             vel_azimuth = int(msg[4:7])
+                
+            altitude = pca.getServoDegrees(servo)
+
+            if abs(altitude_desired - altitude) > altitude_resolution:
+                if altitude_desired > altitude:
+                    altitude += altitude_resolution
+                else:
+                    altitude -= altitude_resolution
+                
+            pca.setServoDegrees(servo, altitude)
 
             if vel_azimuth > azimuth_resolution:
                 current_vel_azimuth = 1
@@ -103,30 +113,20 @@ def remote_control_mode():
                 current_vel_azimuth = -1
             else:
                 current_vel_azimuth = 0
-                
-            altitude_actual = pca.getServoDegrees(servo)
 
-            if abs(altitude_desired - altitude_actual) > altitude_resolution:
-                if altitude_desired > altitude_actual:
-                    altitude_actual += altitude_resolution
-                else:
-                    altitude_actual -= altitude_resolution
-                
-            pca.setServoDegrees(servo, altitude_actual)            
-                
             if current_vel_azimuth != 0 and current_vel_azimuth != previous_vel_azimuth: # Has started or changed direction                
                 direction = False if current_vel_azimuth == 1 else True                
                 pca.startStepper(stepper, direction)
                 start_time = time.ticks_ms()
             elif current_vel_azimuth == 0 and previous_vel_azimuth != 0: # Has stopped!                
                 pca.stopStepper(stepper)                
-                azimuth += get_degrees_moved()
+                azimuth = (azimuth + get_degrees_moved()) % 360
 
             previous_vel_azimuth = current_vel_azimuth
 
             if button == 'A' or button == 'B':
-                azimuth += get_degrees_moved()
-                take_remote_reading(LDR(ldr_pin) if button=='A' else BH1750(), altitude_actual, azimuth)
+                azimuth = (azimuth + get_degrees_moved()) % 360
+                take_remote_reading(LDR(ldr_pin) if button=='A' else BH1750(), altitude, azimuth)
                 start_time = time.ticks_ms()
                 
         sleep(50)
