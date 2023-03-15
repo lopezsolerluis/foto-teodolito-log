@@ -129,9 +129,9 @@ def remote_control_mode():
             previous_vel_azimuth = current_vel_azimuth
 
             if button == 'A' or button == 'B':
-                #azimuth = (azimuth + get_degrees_moved()) % 360
+                azimuth = (azimuth + get_degrees_moved()) % 360
                 take_remote_reading(LDR(ldr_pin) if button=='A' else BH1750(), altitude, azimuth)
-                #start_time = time.ticks_ms()
+                start_time = time.ticks_ms()
             
         sleep(50)
     radio.off() 
