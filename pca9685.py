@@ -1,6 +1,6 @@
 # Adapted from https://github.com/KittenBot/pxt-robotbit/blob/master/main.ts
 
-from microbit import i2c
+from microbit import i2c, sleep
 import time
 
 _PCA9685_ADDRESS = 0x40
@@ -101,12 +101,12 @@ class PCA9685:
     
     def moveStepperDegrees(self, index, degrees): # index: 1 or 2    
         self.setStepper(index, degrees > 0)
-        delta_ms = round(abs(10240 * abs(degrees) / 360))
+        delta_ms = 1024 * abs(degrees) / 36
         return delta_ms # returns milliseconds to stop
 
     def moveStepperDegreesBlocking(self, index, degrees): # index: 1 or 2
         delta_ms = self.moveStepperDegrees(index, degrees)
-        time.sleep_ms(delta_ms)
+        sleep(delta_ms)
         self.stopStepper(index)
         
     def startStepper(self, index, clockwise=True): # index: 1 or 2
