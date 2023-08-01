@@ -12,7 +12,7 @@ import time
 servo = 1 # Servo channel
 stepper = 1 # Stepper channel
 ldr_pin = pin1 # pin to which is attached the ldr
-reduction = 2 # Relation between the gears of the 'foto-teodolito'
+reduction = 4 # Relation between the gears of the 'foto-teodolito'
 min_altitude = 20 # We don't want to measure the buildings, right? :D
 delta_altitude = 5
 
