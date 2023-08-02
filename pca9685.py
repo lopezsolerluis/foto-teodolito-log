@@ -102,7 +102,7 @@ class PCA9685:
     
     def moveStepperDegrees(self, index, degrees): # index: 1 or 2    
         self.setStepper(index, degrees > 0)
-        delta_ms = 10240* abs(degrees) / 360 # microbit.sleep() accepts floats
+        delta_ms = 10260 * abs(degrees) / 360 # microbit.sleep() accepts floats. It was 10240 (?)
         return delta_ms # returns milliseconds to stop
 
     def moveStepperDegreesBlocking(self, index, degrees): # index: 1 or 2

@@ -63,7 +63,7 @@ def take_readings(sensor):
     for altitude in range(min_altitude, 90+delta_altitude, delta_altitude):
         pca.setServoDegrees(servo, altitude)
         steps_in_almucantarat = round(360*cos(radians(altitude)) / delta_altitude) if (altitude != 90) else 1
-        delta_azimuth = 360 / steps_in_almucantarat
+        delta_azimuth = 360.0 / steps_in_almucantarat
         for step in range(steps_in_almucantarat):
             azimuth = step * delta_azimuth
             take_one_reading(sensor, altitude, azimuth)
